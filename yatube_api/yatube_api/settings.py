@@ -1,10 +1,14 @@
+import os
+from datetime import timedelta
 from pathlib import Path
 
-from datetime import timedelta
+from dotenv import find_dotenv, load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'hhz7l-ltdismtf@bzyz+rple7*s*w$jak%whj@(@u0eok^f9k4'
+load_dotenv(find_dotenv())
+
+SECRET_KEY = os.environ['SECRET_KEY']
 
 DEBUG = True
 
@@ -18,6 +22,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'djoser',
     'api',
     'posts',
 ]
@@ -53,7 +58,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'yatube_api.wsgi.application'
-
 
 DATABASES = {
     'default': {
@@ -94,7 +98,13 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
+    
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
 }
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
